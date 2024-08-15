@@ -1,0 +1,16 @@
+
+# manipulaçao de arquivo do codigo fonte
+file = open("arqvteste.txt", "a")
+file.write(' AAAAAAAAA')
+file.close()
+file = open("arqvteste.txt", "r")
+complete = file.read()
+print(complete)
+file.close()
+
+soletrando as palavras da string utilizando loop
+"""
+for i in openfile[::1]:
+    if i == 'r':
+        print("reconheceu: ",i)
+"""
