@@ -1,16 +1,146 @@
+#abertura de arquivo fonte
+print("abre arquivo")
+print("="*20)
+file = open("arqvteste.txt","r")
+openfile = file.read().lower()
 
-# manipulaçao de arquivo do codigo fonte
-file = open("arqvteste.txt", "a")
-file.write(' AAAAAAAAA')
-file.close()
-file = open("arqvteste.txt", "r")
-complete = file.read()
-print(complete)
+
+cacteres_especiais = ("/","*","+","-")
+
+def __next():
+    global i
+    i+=1
+
+def __q8IsEspecial(caracter): #se diferente de caracteres especiais, variavel=true
+    for j in cacteres_especiais[::1]:
+        if caracter != j:
+            print('valido')
+        else:
+            print('invalido')
+
+def __q12(caracter):
+    if caracter == 'i':
+       print(f'reconheceu: {caracter}')
+       __next
+
+def __q11(caracter):
+    if caracter == 'i':
+        print(f'reconheceu: {caracter}')
+
+def __q10(caracter):
+    match caracter:
+        case 'r':
+            __next()
+            __q11(openfile[i])
+        case 'h':
+            __next()
+            __q12(openfile[i])
+
+def __q9(caracter):
+    global i
+    if caracter == 'w':
+        print(f'reconheceu: {caracter}')
+        __next()
+        __q10(openfile[i])
+    else:
+        print("erro q9")
+
+def __q7(caracter):
+    global i
+    if caracter == ' ' or caracter == '\n':
+        print(f'i: {i}')
+        print("palavra reconhecida: program")
+        __next()
+        __q9(openfile[i])
+    else:
+        print("erro no q7")
+
+def __q6(caracter):
+    global i
+    if caracter == 'm':
+        print(f'i: {i}')
+        #print(f'reconheceu: {caracter}')
+        __next()
+        __q7(openfile[i])
+    else:
+        print("erro no q6")
+
+def __q5(caracter):
+    global i
+    if caracter == 'a':
+        print(f'i: {i}')
+        #print(f'reconheceu: {caracter}')
+        __next()
+        __q6(openfile[i])
+    else:
+        print("erro no q5")
+
+def __q4(caracter):
+    global i
+    if caracter == 'r':
+        print(f'i: {i}')
+        #print(f'reconheceu: {caracter}')
+        __next()
+        __q5(openfile[i])
+    else:
+        print("erro no q4")
+
+def __q3(caracter):
+    global i
+    if caracter == 'g':
+        print(f'i: {i}')
+        #print(f'reconheceu: {caracter}')
+        __next()
+        __q4(openfile[i])
+    else:
+        print("erro no q3")
+
+def __q2(caracter):
+    global i
+    if caracter == 'o':
+        print(f'i: {i}')
+        #print(f'reconheceu: {caracter}')
+        __next()
+        __q3(openfile[i])
+    else:
+        print("erro no q2")
+
+def __q1(caracter):
+    global i
+    if caracter == 'r':
+        print(f'i: {i}')
+        #print(f'reconheceu: {caracter}')
+        __next()
+        __q2(openfile[i])
+    else:
+        print("erro no q1")
+
+def __q0(caracter):
+    global i
+    if caracter == 'p':
+        print(f'i: {i}')
+        #print(f'reconheceu: {caracter}')
+        __next()
+        __q1(openfile[i])
+    else:
+        #__q8(openfile[i])
+        print("erro no q0")
+
+i = 0 #posiçao inicial do cursor
+# chama a funçao q0
+__q0(openfile[i])
+print("="*20)
+print("fecha arquivo")
 file.close()
 
-soletrando as palavras da string utilizando loop
-"""
-for i in openfile[::1]:
-    if i == 'r':
-        print("reconheceu: ",i)
-"""
+
+
+
+def q0(self):
+        self.pointer = self.open_file()
+        if self.pointer == 'p':
+            print(f'reconheceu: {self.pointer}')
+            self.next()
+            self.q1()
+        else:
+            print('deu ruim')

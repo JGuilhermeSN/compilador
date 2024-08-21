@@ -1,0 +1,11 @@
+then
+if
+do
+program
+read
+var
+end
+endif
+while
+write
+
