@@ -120,8 +120,10 @@ class Lexico:
             case ',':
                 self.symbol_verifyer()
             case _: # metodo defaut do match case
-                if self.pointer.isalpha:
+                if self.pointer.isalpha():
                     self.id_verifyer()
+                elif self.pointer.isascii():
+                    self.non_exists_symbols()
 
 
 
@@ -577,13 +579,16 @@ class Lexico:
     def q40(self):
         """reconhece o token '==' e '!=' """
         self.pointer = self.source_file[self.i]
-        if self.pointer == '=' or self.pointer == '!':
+        if self.pointer == '=':
             self.token += self.pointer
             self.next()
             self.insert_token(token=self.token.upper(), lexema=self.token)
-            #self.symbol_verifyer()
+        elif not self.pointer == '=':
+            print('erro simbolos == ou != nao reconhecido')
+            self.q0()
         else:
-            print('erro simbolos == e !=')
+            print('erro simbolos == ou !=')
+            self.q0()
 
 
 
@@ -610,12 +615,15 @@ class Lexico:
                 self.token += self.pointer
                 self.next()
                 self.insert_token(token=self.token.upper(), lexema=self.token)
-            #elif self.pointer == '\n' or self.pointer.isalnum() or not self.pointer == '=' :
             else:
                 self.q0()
         else:
             self.insert_token(token='ID', lexema=self.token)
 
+    def non_exists_symbols(self):
+        print(f'"{self.pointer}" nao existe na sintaxe')
+        self.next()
+        self.q0()
 
     # essa porra ta desativada por enquanto
     def doc_verifyer(self): #verifica se esta no final da string

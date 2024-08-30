@@ -1,12 +1,1 @@
-program{
-var teste, tst;
-if (teste==tst) then
-	write (ola);
-endif;
-while(teste>tst) do{
-	read (teste);
-};
-for (tst:0 ; tst!=10 ; tst: tst+1){
-	write (teste);
-};
-}
+:#!===$
