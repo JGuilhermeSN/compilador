@@ -3,8 +3,8 @@ Modulo do analisador lexico do compilador
 by: José Guilherme
 """
 #pylint: disable=missing-function-docstring
-
 import utilsLexico
+from my_exception import EmptyFileException
 
 class Lexico:
     """classe do analisador lexico"""
@@ -14,30 +14,40 @@ class Lexico:
         self.source_file = source_file
         self.i = 0
         self.token = " "
-        self.counter = 1
         self.pointer = self.open_file()
 
 
+
     def open_file(self):
-        """funçao de abertura do arquivo"""
-        file = input('arquivo fonte?: ')
-        self.source_file = open(file,"r", encoding='utf-8').read().lower()
-        return self.source_file[self.i]
+        try:
+            file = input('arquivo fonte?: ')
+            print('='*30)
+            self.source_file = open(file,"r", encoding='utf-8').read().lower().replace(" ","").replace("\t","").replace("\xa0","")
+            if not self.source_file:
+                raise EmptyFileException()
+            return self.source_file[self.i]
+        except FileNotFoundError:
+            print("O arquivo nao foi encontrado")
+
 
     def next(self):
         self.i += 1
-        self.counter +=1
 
 
     def insert_token(self,token=None, lexema=None):
-        token = utilsLexico.Token(token, lexema)
-        token.token_list()
+        if not self.pointer == '\n' or not self.token == '':
+            token = utilsLexico.Token(token, lexema)
+            token.token_list()
         self.q0()
 
     def q0(self):
+        #print(len(self.source_file), self.i) #so pra saber qual iteraçao essa porra ta
+        if len(self.source_file) == self.i:
+            return 0
+        elif self.pointer == '\n':
+            self.next()
         self.pointer = self.source_file[self.i]
         self.token = ""
-        self.counter = 1
         match self.pointer:
             case 'p':
                 self.token += self.pointer
@@ -71,8 +81,49 @@ class Lexico:
                 self.token += self.pointer
                 self.next()
                 self.q28()
+            case 'f':
+                self.token += self.pointer
+                self.next()
+                self.q37()
+            case '<':
+                self.symbol_verifyer()
+            case '>':
+                self.symbol_verifyer()
+            case '=':
+                self.token += self.pointer
+                self.next()
+                self.q40()
+            case '!':
+                self.token += self.pointer
+                self.next()
+                self.q40()
+            case '/':
+                self.symbol_verifyer()
+            case '*':
+                self.symbol_verifyer()
+            case '+':
+                self.symbol_verifyer()
+            case '-':
+                self.symbol_verifyer()
+            case '{':
+                self.symbol_verifyer()
+            case '}':
+                self.symbol_verifyer()
+            case '(':
+                self.symbol_verifyer()
+            case ')':
+                self.symbol_verifyer()
+            case ':':
+                self.symbol_verifyer()
+            case ';':
+                self.symbol_verifyer()
+            case ',':
+                self.symbol_verifyer()
             case _: # metodo defaut do match case
-                pass
+                if self.pointer.isalpha:
+                    self.id_verifyer()
+
+
 
     def q1(self):
         self.pointer = self.source_file[self.i]
@@ -81,7 +132,9 @@ class Lexico:
             self.next()
             self.q2()
         else:
-            print('errado')
+            self.token += self.pointer
+            self.next()
+            self.id_verifyer()
 
     def q2(self):
         self.pointer = self.source_file[self.i]
@@ -90,7 +143,9 @@ class Lexico:
             self.next()
             self.q3()
         else:
-            print('errado')
+            self.token += self.pointer
+            self.next()
+            self.id_verifyer()
 
     def q3(self):
         self.pointer = self.source_file[self.i]
@@ -99,7 +154,9 @@ class Lexico:
             self.next()
             self.q4()
         else:
-            print('errado')
+            self.token += self.pointer
+            self.next()
+            self.id_verifyer()
 
     def q4(self):
         self.pointer = self.source_file[self.i]
@@ -108,7 +165,9 @@ class Lexico:
             self.next()
             self.q5()
         else:
-            print('errado')
+            self.token += self.pointer
+            self.next()
+            self.id_verifyer()
 
     def q5(self):
         self.pointer = self.source_file[self.i]
@@ -117,7 +176,9 @@ class Lexico:
             self.next()
             self.q6()
         else:
-            print('errado')
+            self.token += self.pointer
+            self.next()
+            self.id_verifyer()
 
     def q6(self):
         self.pointer = self.source_file[self.i]
@@ -126,17 +187,22 @@ class Lexico:
             self.next()
             self.q7()
         else:
-            print('errado')
+            self.token += self.pointer
+            self.next()
+            self.id_verifyer()
 
     def q7(self):
         """reconhece o token 'program' """
-        self.pointer = self.source_file[self.i]
-        if self.pointer == '\n':
-            print(self.counter - 1)
-            self.next()
-            self.insert_token(self.token.upper(), self.token)
+        if not len(self.source_file) == self.i:
+            self.pointer = self.source_file[self.i]
+            if not self.pointer.isalnum() or self.pointer == '\n':
+                self.insert_token(token=self.token.upper(), lexema=self.token)
+            else:
+                self.token += self.pointer
+                self.next()
+                self.id_verifyer()
         else:
-            print('errado')
+            self.insert_token(token=self.token.upper(), lexema=self.token)
 
     def q8(self):
         self.pointer = self.source_file[self.i]
@@ -145,17 +211,22 @@ class Lexico:
             self.next()
             self.q9()
         else:
-            print('errado')
+            self.token += self.pointer
+            self.next()
+            self.id_verifyer()
 
     def q9(self):
         """reconhece o token 'if' """
-        self.pointer = self.source_file[self.i]
-        if self.pointer == '\n':
-            print(self.counter - 1)
-            self.next()
-            self.insert_token(self.token.upper(), self.token)
+        if not len(self.source_file) == self.i:
+            self.pointer = self.source_file[self.i]
+            if not self.pointer.isalnum() or self.pointer == '\n':
+                self.insert_token(token=self.token.upper(), lexema=self.token)
+            else:
+                self.token += self.pointer
+                self.next()
+                self.id_verifyer()
         else:
-            print('erro')
+            self.insert_token(token=self.token.upper(), lexema=self.token)
 
     def q10(self):
         self.pointer = self.source_file[self.i]
@@ -164,7 +235,9 @@ class Lexico:
             self.next()
             self.q11()
         else:
-            print('errado')
+            self.token += self.pointer
+            self.next()
+            self.id_verifyer()
 
     def q11(self):
         self.pointer = self.source_file[self.i]
@@ -173,7 +246,9 @@ class Lexico:
             self.next()
             self.q12()
         else:
-            print('erro')
+            self.token += self.pointer
+            self.next()
+            self.id_verifyer()
 
     def q12(self):
         self.pointer = self.source_file[self.i]
@@ -182,15 +257,23 @@ class Lexico:
             self.next()
             self.q13()
         else:
-            print('erro')
+            self.token += self.pointer
+            self.next()
+            self.id_verifyer()
 
     def q13(self):
         """reconhece o token 'then' """
-        self.pointer = self.source_file[self.i]
-        if self.pointer == '\n':
-            print(self.counter - 1)
-            self.next()
-            self.insert_token(self.token.upper(), self.token)
+        if not len(self.source_file) == self.i:
+            self.pointer = self.source_file[self.i]
+            if not self.pointer.isalnum() or self.pointer == '\n':
+                self.insert_token(token=self.token.upper(), lexema=self.token)
+            else:
+                self.token += self.pointer
+                self.next()
+                self.id_verifyer()
+        else:
+            self.insert_token(token=self.token.upper(), lexema=self.token)
+
 
     def q14(self):
         self.pointer = self.source_file[self.i]
@@ -199,16 +282,19 @@ class Lexico:
             self.next()
             self.q15()
         else:
-            print('erro')
+            self.token += self.pointer
+            self.next()
+            self.id_verifyer()
 
     def q15(self):
         self.pointer = self.source_file[self.i]
-        if self.pointer == '\n':
-            print(self.counter - 1)
+        if self.pointer == '\n' or self.pointer == ' ':
             self.next()
-            self.insert_token(self.token.upper(), self.token)
+            self.insert_token(token=self.token.upper(), lexema=self.token)
         else:
-            print('erro')
+            self.token += self.pointer
+            self.next()
+            self.id_verifyer()
 
     def q16(self):
         self.pointer = self.source_file[self.i]
@@ -217,7 +303,9 @@ class Lexico:
             self.next()
             self.q17()
         else:
-            print('erro')
+            self.token += self.pointer
+            self.next()
+            self.id_verifyer()
 
     def q17(self):
         self.pointer = self.source_file[self.i]
@@ -226,7 +314,9 @@ class Lexico:
             self.next()
             self.q18()
         else:
-            print('erro')
+            self.token += self.pointer
+            self.next()
+            self.id_verifyer()
 
     def q18(self):
         self.pointer = self.source_file[self.i]
@@ -235,14 +325,22 @@ class Lexico:
             self.next()
             self.q19()
         else:
-            print('erro')
+            self.token += self.pointer
+            self.next()
+            self.id_verifyer()
 
     def q19(self):
-        self.pointer = self.source_file[self.i]
-        if self.pointer == '\n':
-            print(self.counter - 1)
-            self.next()
-            self.insert_token(self.token.upper(), self.token)
+        """reconhece o token 'read' """
+        if not len(self.source_file) == self.i:
+            self.pointer = self.source_file[self.i]
+            if not self.pointer.isalnum() or self.pointer == '\n':
+                self.insert_token(token=self.token.upper(), lexema=self.token)
+            else:
+                self.token += self.pointer
+                self.next()
+                self.id_verifyer()
+        else:
+            self.insert_token(token=self.token.upper(), lexema=self.token)
 
     def q20(self):
         self.pointer = self.source_file[self.i]
@@ -251,7 +349,9 @@ class Lexico:
             self.next()
             self.q21()
         else:
-            print('erro')
+            self.token += self.pointer
+            self.next()
+            self.id_verifyer()
 
     def q21(self):
         self.pointer = self.source_file[self.i]
@@ -260,16 +360,22 @@ class Lexico:
             self.next()
             self.q22()
         else:
-            print('erro')
+            self.token += self.pointer
+            self.next()
+            self.id_verifyer()
 
     def q22(self):
-        self.pointer = self.source_file[self.i]
-        if self.pointer == '\n':
-            print(self.counter - 1)
-            self.next()
-            self.insert_token(self.token.upper(), self.token)
+        """reconhece o token 'var' """
+        if not len(self.source_file) == self.i:
+            self.pointer = self.source_file[self.i]
+            if not self.pointer.isalnum() or self.pointer == '\n':
+                self.insert_token(token=self.token.upper(), lexema=self.token)
+            else:
+                self.token += self.pointer
+                self.next()
+                self.id_verifyer()
         else:
-            print('erro')
+            self.insert_token(token=self.token.upper(), lexema=self.token)
 
     def q23(self):
         self.pointer = self.source_file[self.i]
@@ -278,7 +384,9 @@ class Lexico:
             self.next()
             self.q24()
         else:
-            print('erro')
+            self.token += self.pointer
+            self.next()
+            self.id_verifyer()
 
     def q24(self):
         self.pointer = self.source_file[self.i]
@@ -287,7 +395,9 @@ class Lexico:
             self.next()
             self.q25()
         else:
-            print('erro')
+            self.token += self.pointer
+            self.next()
+            self.id_verifyer()
 
     def q25(self):
         self.pointer = self.source_file[self.i]
@@ -296,9 +406,8 @@ class Lexico:
             self.next()
             self.q26()
         elif self.pointer == '\n' or self.pointer == ' ':
-            print(self.counter - 1)
             self.next()
-            self.insert_token(self.token.upper(), self.token)
+            self.insert_token(token=self.token.upper(), lexema=self.token)
 
     def q26(self):
         self.pointer = self.source_file[self.i]
@@ -307,16 +416,22 @@ class Lexico:
             self.next()
             self.q27()
         else:
-            print('erro')
+            self.token += self.pointer
+            self.next()
+            self.id_verifyer()
 
     def q27(self):
-        self.pointer = self.source_file[self.i]
-        if self.pointer == '\n':
-            print(self.counter - 1)
-            self.next()
-            self.insert_token(self.token.upper(), self.token)
+        """reconhece o token 'endif' """
+        if not len(self.source_file) == self.i:
+            self.pointer = self.source_file[self.i]
+            if not self.pointer.isalnum() or self.pointer == '\n':
+                self.insert_token(token=self.token.upper(), lexema=self.token)
+            else:
+                self.token += self.pointer
+                self.next()
+                self.id_verifyer()
         else:
-            print('erro')
+            self.insert_token(token=self.token.upper(), lexema=self.token)
 
     def q28(self):
         self.pointer = self.source_file[self.i]
@@ -325,6 +440,8 @@ class Lexico:
             self.next()
             self.q29()
         elif self.pointer == 'r':
+            self.token += self.pointer
+            self.next()
             self.q33()
 
 
@@ -335,7 +452,9 @@ class Lexico:
             self.next()
             self.q30()
         else:
-            print('erro')
+            self.token += self.pointer
+            self.next()
+            self.id_verifyer()
 
     def q30(self):
         self.pointer = self.source_file[self.i]
@@ -344,7 +463,9 @@ class Lexico:
             self.next()
             self.q31()
         else:
-            print('erro')
+            self.token += self.pointer
+            self.next()
+            self.id_verifyer()
 
     def q31(self):
         self.pointer = self.source_file[self.i]
@@ -353,16 +474,23 @@ class Lexico:
             self.next()
             self.q32()
         else:
-            print('erro')
+            self.token += self.pointer
+            self.next()
+            self.id_verifyer()
 
     def q32(self):
-        self.pointer = self.source_file[self.i]
-        if self.pointer == '\n':
-            print(self.counter - 1)
-            self.next()
-            self.insert_token(self.token.upper(), self.token)
+        """reconhece o token 'while' """
+        if not len(self.source_file) == self.i:
+            self.pointer = self.source_file[self.i]
+            if not self.pointer.isalnum() or self.pointer == '\n':
+                self.insert_token(token=self.token.upper(), lexema=self.token)
+            else:
+                self.token += self.pointer
+                self.next()
+                self.id_verifyer()
         else:
-            print('erro')
+            self.insert_token(token=self.token.upper(), lexema=self.token)
+
 
     def q33(self):
         self.pointer = self.source_file[self.i]
@@ -371,7 +499,9 @@ class Lexico:
             self.next()
             self.q34()
         else:
-            print('erro')
+            self.token += self.pointer
+            self.next()
+            self.id_verifyer()
 
     def q34(self):
         self.pointer = self.source_file[self.i]
@@ -380,7 +510,9 @@ class Lexico:
             self.next()
             self.q35()
         else:
-            print('erro')
+            self.token += self.pointer
+            self.next()
+            self.id_verifyer()
 
     def q35(self):
         self.pointer = self.source_file[self.i]
@@ -389,15 +521,109 @@ class Lexico:
             self.next()
             self.q36()
         else:
-            print('erro')
+            self.token += self.pointer
+            self.next()
+            self.id_verifyer()
 
     def q36(self):
+        """reconhece o token 'write' """
+        if not len(self.source_file) == self.i:
+            self.pointer = self.source_file[self.i]
+            if not self.pointer.isalnum() or self.pointer == '\n':
+                self.insert_token(token=self.token.upper(), lexema=self.token)
+            else:
+                self.token += self.pointer
+                self.next()
+                self.id_verifyer()
+        else:
+            self.insert_token(token=self.token.upper(), lexema=self.token)
+
+    def q37(self):
         self.pointer = self.source_file[self.i]
-        if self.pointer == '\n' or self.pointer == ' ':
-            print(self.counter - 1)
+        if self.pointer == 'o':
+            self.token += self.pointer
             self.next()
-            self.insert_token(self.token.upper(), self.token)
-        print('erro')
+            self.q38()
+        else:
+            self.token += self.pointer
+            self.next()
+            self.id_verifyer()
+
+    def q38(self):
+        self.pointer = self.source_file[self.i]
+        if self.pointer == 'r':
+            self.token += self.pointer
+            self.next()
+            self.q39()
+        else:
+            self.token += self.pointer
+            self.next()
+            self.id_verifyer()
+
+    def q39(self):
+        """reconhece o token 'for' """
+        self.pointer = self.source_file[self.i]
+        if not len(self.source_file) == self.i:
+            self.pointer = self.source_file[self.i]
+            if not self.pointer.isalnum() or self.pointer == '\n':
+                self.insert_token(token=self.token.upper(), lexema=self.token)
+            else:
+                self.token += self.pointer
+                self.next()
+                self.id_verifyer()
+        else:
+            self.insert_token(token=self.token.upper(), lexema=self.token)
+
+    def q40(self):
+        """reconhece o token '==' e '!=' """
+        self.pointer = self.source_file[self.i]
+        if self.pointer == '=' or self.pointer == '!':
+            self.token += self.pointer
+            self.next()
+            self.insert_token(token=self.token.upper(), lexema=self.token)
+            #self.symbol_verifyer()
+        else:
+            print('erro simbolos == e !=')
+
+
+
+    def id_verifyer(self):
+        """funçao para reconhecer id """
+        if not len(self.source_file) == self.i:
+            self.pointer = self.source_file[self.i]
+            if self.pointer.isalnum():
+                self.token += self.pointer
+                self.next()
+                self.id_verifyer()
+            elif not self.pointer.isspace or self.pointer == '\n' or not self.pointer.isalnum():
+                self.insert_token(token='ID', lexema=self.token)
+            else:
+                self.q0()
+        else:
+            self.insert_token(token='ID', lexema=self.token)
+
+    def symbol_verifyer(self):
+        """funçao para reconhecer simbolos"""
+        if not len(self.source_file) == self.i:
+            self.pointer = self.source_file[self.i]
+            if not self.pointer == '\n' and not self.pointer.isalnum():
+                self.token += self.pointer
+                self.next()
+                self.insert_token(token=self.token.upper(), lexema=self.token)
+            #elif self.pointer == '\n' or self.pointer.isalnum() or not self.pointer == '=' :
+            else:
+                self.q0()
+        else:
+            self.insert_token(token='ID', lexema=self.token)
+
+
+    # essa porra ta desativada por enquanto
+    def doc_verifyer(self): #verifica se esta no final da string
+        if len(self.source_file) == self.i:
+            print(f"{len(self.source_file)}")
+            print(self.i)
+        else:
+            self.id_verifyer()
 
 
 lexico = Lexico()
