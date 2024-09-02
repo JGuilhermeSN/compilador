@@ -15,7 +15,7 @@ class Lexico:
         self.i = 0
         self.token = " "
         self.pointer = self.open_file()
-
+        self.lista_tk = []
 
 
     def open_file(self):
@@ -35,15 +35,17 @@ class Lexico:
 
 
     def insert_token(self,token=None, lexema=None):
+        lista = []
         if not self.pointer == '\n' or not self.token == '':
             token = utilsLexico.Token(token, lexema)
-            token.token_list()
+            lista = token.token_list()
+            self.lista_tk.append(lista)   # para voltar a imprimir diretamente os tokens,
+                                  # basta remover essa lista e o comentario do token_list
         self.q0()
 
     def q0(self):
-        #print(len(self.source_file), self.i) #so pra saber qual iteraçao essa porra ta
         if len(self.source_file) == self.i:
-            return 0
+            return self.lista_tk
         elif self.pointer == '\n':
             self.next()
         self.pointer = self.source_file[self.i]
@@ -85,10 +87,6 @@ class Lexico:
                 self.token += self.pointer
                 self.next()
                 self.q37()
-            case '<':
-                self.symbol_verifyer()
-            case '>':
-                self.symbol_verifyer()
             case '=':
                 self.token += self.pointer
                 self.next()
@@ -97,34 +95,14 @@ class Lexico:
                 self.token += self.pointer
                 self.next()
                 self.q40()
-            case '/':
-                self.symbol_verifyer()
-            case '*':
-                self.symbol_verifyer()
-            case '+':
-                self.symbol_verifyer()
-            case '-':
-                self.symbol_verifyer()
-            case '{':
-                self.symbol_verifyer()
-            case '}':
-                self.symbol_verifyer()
-            case '(':
-                self.symbol_verifyer()
-            case ')':
-                self.symbol_verifyer()
-            case ':':
-                self.symbol_verifyer()
-            case ';':
-                self.symbol_verifyer()
-            case ',':
+            case '<' | '>' | '=' | '!' | '/' | '*' | '+' | '-' | '{' | '}' | '(' | ')' | ':' | ';' | ',':
                 self.symbol_verifyer()
             case _: # metodo defaut do match case
-                if self.pointer.isalpha():
+                if self.pointer.isalnum() or self.pointer == '\n':
                     self.id_verifyer()
-                elif self.pointer.isascii():
-                    self.non_exists_symbols()
-
+                #elif self.pointer.isascii():
+                #    self.non_exists_symbols()
+        return self.lista_tk
 
 
     def q1(self):

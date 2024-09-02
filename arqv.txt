@@ -1,1 +1,6 @@
-:#!===$
+program{
+    var {teste, tst};
+    if (teste==10) then
+	    write (ola);
+    endif;
+}

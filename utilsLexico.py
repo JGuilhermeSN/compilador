@@ -29,23 +29,27 @@ class Token:
             {"lexema": "*",    "token":"MULTIPLICADOR",    "tipo":"operador_aritmetico"},
             {"lexema": "+",    "token":"ADIÇAO",    "tipo":"operador_aritmetico"},
             {"lexema": "-",    "token":"SUBTRAÇAO",    "tipo":"operador_aritmetico"},
-            {"lexema": "{",    "token":"ABRE_CHV",    "tipo":"abre_chave"},
-            {"lexema": "}",    "token":"FECHA_CHV",    "tipo":"fecha_chave"},
-            {"lexema": "(",    "token":"ABRE_PAR",    "tipo":"abre_parentese"},
-            {"lexema": ")",    "token":"FECHA_PAR",    "tipo":"fecha_parentese"},
-            {"lexema": ":",    "token":"ATRIBUIÇAO",    "tipo":"atribuir"},
-            {"lexema": ";",    "token":"PONTO_VIRGULA",    "tipo":"ponto_virgula"},
-            {"lexema": ",",    "token":"VIRGULA",    "tipo":"virgula"},
+            {"lexema": "{",    "token":"OPEN_BRACE",    "tipo":"abre_chave"},
+            {"lexema": "}",    "token":"CLOSE_BRACE",    "tipo":"fecha_chave"},
+            {"lexema": "(",    "token":"OPEN_PAR",    "tipo":"abre_parentese"},
+            {"lexema": ")",    "token":"CLOSE_PAR",    "tipo":"fecha_parentese"},
+            {"lexema": ":",    "token":"ASSIGN",    "tipo":"atribuir"},
+            {"lexema": ";",    "token":"SEMICOLON",    "tipo":"ponto_virgula"},
+            {"lexema": ",",    "token":"COMMA",    "tipo":"virgula"},
             {"lexema": self.lexema,      "token":"ID",      "tipo":"identificador"},
             {"lexema": self.lexema,      "token":"NUM",      "tipo":"numerador"},
         ]
 
     def token_list(self):
+        lista = []
         if self.lexema.isnumeric():
-            print(f'{self.lexema} / NUM / numerador')
+            #print(f'{self.lexema} / NUM / numerador')
+            lista.append(f'{self.lexema} / NUM / numerador')
         else:
             for item in self.classifyer:
                 # Verifica se o token ou lexema coincide
                 if item["token"] == self.token or item["lexema"] == self.lexema:
-                    print(f'{item["lexema"]} / {item["token"]} / {item["tipo"]}')
+                    #print(f'{item["lexema"]} / {item["token"]} / {item["tipo"]}')
+                    lista.append(f'{item["lexema"]} / {item["token"]} / {item["tipo"]}')
                     break
+        return lista
