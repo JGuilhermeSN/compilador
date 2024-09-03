@@ -1,6 +1,6 @@
 program{
     var {teste, tst};
     if (teste==10) then
-	    write (ola);
+	    write (  estou fazendo um teste);
     endif;
 }

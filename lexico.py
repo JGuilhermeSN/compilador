@@ -16,13 +16,18 @@ class Lexico:
         self.token = " "
         self.pointer = self.open_file()
         self.lista_tk = []
+        self.line = 1
+        self.column = 1
+        self.counter = 0
+        #self.start_line = 1  # Linha inicial do token
+        #self.start_column = 1  # self.column inicial do token
 
 
     def open_file(self):
         try:
             file = input('arquivo fonte?: ')
             print('='*30)
-            self.source_file = open(file,"r", encoding='utf-8').read().lower().replace(" ","").replace("\t","").replace("\xa0","")
+            self.source_file = open(file,"r", encoding='utf-8').read().lower().replace("\xa0","").replace("    ","\t")
             if not self.source_file:
                 raise EmptyFileException()
             return self.source_file[self.i]
@@ -31,25 +36,43 @@ class Lexico:
 
 
     def next(self):
-        self.i += 1
-
+        #self.i += 1
+        if self.pointer == ' ':
+            self.column += 1
+            self.i += 1
+            self.counter += 1
+        elif self.pointer == '\n':
+            self.line += 1
+            self.i += 1
+            self.column = 1
+            self.counter += 1
+        elif self.pointer == '\t':
+            self.column += 4
+            self.i += 1
+            self.counter += 1
+        else:
+            self.column +=1
+            self.i += 1
+            self.counter += 1
 
     def insert_token(self,token=None, lexema=None):
-        lista = []
-        if not self.pointer == '\n' or not self.token == '':
-            token = utilsLexico.Token(token, lexema)
+        if self.pointer != '\n' or token != 'ID':
+            #self.column -= self.counter
+            token = utilsLexico.Token(token, lexema, self.line, self.column-self.counter)
             lista = token.token_list()
-            self.lista_tk.append(lista)   # para voltar a imprimir diretamente os tokens,
-                                  # basta remover essa lista e o comentario do token_list
+            self.lista_tk.append(lista)
+            #self.column += 1
         self.q0()
+
 
     def q0(self):
         if len(self.source_file) == self.i:
             return self.lista_tk
-        elif self.pointer == '\n':
+        elif self.pointer == '\n' or self.pointer.isspace():
             self.next()
         self.pointer = self.source_file[self.i]
         self.token = ""
+        self.counter = 0
         match self.pointer:
             case 'p':
                 self.token += self.pointer
@@ -100,7 +123,10 @@ class Lexico:
             case _: # metodo defaut do match case
                 if self.pointer.isalnum() or self.pointer == '\n':
                     self.id_verifyer()
-                #elif self.pointer.isascii():
+                elif self.pointer.isspace():
+                    self.next()
+                    self.pointer = self.source_file[self.i]
+                    self.q0()
                 #    self.non_exists_symbols()
         return self.lista_tk
 
@@ -603,6 +629,9 @@ class Lexico:
         self.next()
         self.q0()
 
+    def retorno(self):
+        return self.lista_tk
+
     # essa porra ta desativada por enquanto
     def doc_verifyer(self): #verifica se esta no final da string
         if len(self.source_file) == self.i:
@@ -612,5 +641,6 @@ class Lexico:
             self.id_verifyer()
 
 
+# usar para testar somente o analisador lexico
 lexico = Lexico()
 lexico.q0()

@@ -16,3 +16,6 @@ def open_file(self):
             return self.source_file[self.i]
         except FileNotFoundError:
             print("O arquivo nao foi encontrado")
+
+
+fazer a verificaçao de espaço antes das analises de q0, um /n equivale a 4 " "

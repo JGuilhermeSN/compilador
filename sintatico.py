@@ -8,17 +8,23 @@ class Sintatico:
     def __init__(self):
         self.token_list = []
         self.lexico = Lexico()
+        self.pilhatopo = []
 
 
     def lista_token(self):
-        print('chegou aqui')
-        self.token_list.append(self.lexico.q0())
-        #print(self.token_list)
+        tokens = self.lexico.q0()
+        self.token_list.extend(tokens)
 
     def amostra(self):
         print('listagem de tokens')
         for i in self.token_list:
-            print(i)
+            print(f'{i}')
+
+    def compara(self):
+
+        if self.token_list[0] == self.pilhatopo:
+            pass
+
 
 sintatico = Sintatico()
 sintatico.lista_token()

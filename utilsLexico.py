@@ -2,10 +2,13 @@
 # pylint: disable=missing-function-docstring
 # pylint: disable=missing-class-docstring
 class Token:
-    def __init__(self, token='', lexema=''):
+    def __init__(self, token='', lexema='', linha='', coluna=''):
         self.token = token
         self.lexema = lexema
+        self.linha = linha
+        self.coluna = coluna
         self.classifyer = None
+
 
         self.classifyer = [
             {"lexema": "program", "token":"PROGRAM", "tipo":"palavra_chave"},
@@ -40,16 +43,17 @@ class Token:
             {"lexema": self.lexema,      "token":"NUM",      "tipo":"numerador"},
         ]
 
+
     def token_list(self):
         lista = []
         if self.lexema.isnumeric():
-            #print(f'{self.lexema} / NUM / numerador')
-            lista.append(f'{self.lexema} / NUM / numerador')
+            print(f'{self.lexema} / NUM / numerador / Ln:{self.linha} / Col:{self.coluna}') # visualizaçao
+            lista.append(f'{self.lexema} / NUM / numerador / Ln:{self.linha} / Col:{self.coluna}')
         else:
             for item in self.classifyer:
                 # Verifica se o token ou lexema coincide
                 if item["token"] == self.token or item["lexema"] == self.lexema:
-                    #print(f'{item["lexema"]} / {item["token"]} / {item["tipo"]}')
-                    lista.append(f'{item["lexema"]} / {item["token"]} / {item["tipo"]}')
+                    print(f'{item["lexema"]} / {item["token"]} / {item["tipo"]} / Ln:{self.linha} / Col:{self.coluna}') # visualizaçao do que esta sendo enviado para a lista sintatica
+                    lista.append(f'{item["lexema"]} / {item["token"]} / {item["tipo"]} / Ln:{self.linha} / Col:{self.coluna}')
                     break
         return lista
