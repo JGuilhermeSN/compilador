@@ -1,6 +1,7 @@
 # pylint: disable=missing-module-docstring
 # pylint: disable=missing-function-docstring
 # pylint: disable=missing-class-docstring
+# pylint: disable=line-too-long
 class Token:
     def __init__(self, token='', lexema='', linha='', coluna=''):
         self.token = token
@@ -48,7 +49,7 @@ class Token:
         lista = []
         if self.lexema.isnumeric():
             print(f'{self.lexema} / NUM / numerador / Ln:{self.linha} / Col:{self.coluna}') # visualizaçao
-            lista.append(f'{self.lexema} / NUM / numerador / Ln:{self.linha} / Col:{self.coluna}')
+            lista.append(f'{self.lexema} / NUM / numerador / Ln:{self.linha} / Col:{self.coluna}') # envio para o sintatico
         else:
             for item in self.classifyer:
                 # Verifica se o token ou lexema coincide

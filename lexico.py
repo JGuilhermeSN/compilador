@@ -1,9 +1,10 @@
+# pylint: disable=line-too-long
 """
 Modulo do analisador lexico do compilador
 by: José Guilherme
 """
 #pylint: disable=missing-function-docstring
-import utilsLexico
+import utils_lexico
 from my_exception import EmptyFileException
 
 class Lexico:
@@ -19,8 +20,6 @@ class Lexico:
         self.line = 1
         self.column = 1
         self.counter = 0
-        #self.start_line = 1  # Linha inicial do token
-        #self.start_column = 1  # self.column inicial do token
 
 
     def open_file(self):
@@ -35,8 +34,7 @@ class Lexico:
             print("O arquivo nao foi encontrado")
 
 
-    def next(self):
-        #self.i += 1
+    def next(self): # contagem de linhas e colunas
         if self.pointer == ' ':
             self.column += 1
             self.i += 1
@@ -57,11 +55,9 @@ class Lexico:
 
     def insert_token(self,token=None, lexema=None):
         if self.pointer != '\n' or token != 'ID':
-            #self.column -= self.counter
-            token = utilsLexico.Token(token, lexema, self.line, self.column-self.counter)
+            token = utils_lexico.Token(token, lexema, self.line, self.column-self.counter)
             lista = token.token_list()
             self.lista_tk.append(lista)
-            #self.column += 1
         self.q0()
 
 
@@ -118,16 +114,17 @@ class Lexico:
                 self.token += self.pointer
                 self.next()
                 self.q40()
-            case '<' | '>' | '=' | '!' | '/' | '*' | '+' | '-' | '{' | '}' | '(' | ')' | ':' | ';' | ',':
+            case '<' | '>' | '/' | '*' | '+' | '-' | '{' | '}' | '(' | ')' | ':' | ';' | ',':
                 self.symbol_verifyer()
-            case _: # metodo defaut do match case
-                if self.pointer.isalnum() or self.pointer == '\n':
+            case _: # Default
+                if self.pointer.isalnum() or self.pointer == '\n':# verificaçao de variavel
                     self.id_verifyer()
                 elif self.pointer.isspace():
                     self.next()
                     self.pointer = self.source_file[self.i]
                     self.q0()
-                #    self.non_exists_symbols()
+                else:
+                    self.non_identifyed() # tratamento de caracteres nao identificados
         return self.lista_tk
 
 
@@ -588,8 +585,9 @@ class Lexico:
             self.next()
             self.insert_token(token=self.token.upper(), lexema=self.token)
         elif not self.pointer == '=':
-            print('erro simbolos == ou != nao reconhecido')
-            self.q0()
+            print(f'Erro: token == ou !=, ln {(self.line)}, col {(self.column-self.counter)}')
+            #self.q0() # nesta chamada o codigo continuara normalmente apos o aviso
+            return 1
         else:
             print('erro simbolos == ou !=')
             self.q0()
@@ -624,21 +622,9 @@ class Lexico:
         else:
             self.insert_token(token='ID', lexema=self.token)
 
-    def non_exists_symbols(self):
-        print(f'"{self.pointer}" nao existe na sintaxe')
-        self.next()
-        self.q0()
-
-    def retorno(self):
-        return self.lista_tk
-
-    # essa porra ta desativada por enquanto
-    def doc_verifyer(self): #verifica se esta no final da string
-        if len(self.source_file) == self.i:
-            print(f"{len(self.source_file)}")
-            print(self.i)
-        else:
-            self.id_verifyer()
+    def non_identifyed(self):
+        print(f'Erro: "{self.pointer}" caracter nao identificado, ln {self.line} col {self.column-self.counter}')
+        return 1
 
 
 # usar para testar somente o analisador lexico

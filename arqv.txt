@@ -1,4 +1,4 @@
-program{
+program programa{
     var {teste, tst};
     if (teste==10) then
 	    write (  estou fazendo um teste);
