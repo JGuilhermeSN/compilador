@@ -1,0 +1,18 @@
+program {
+    var scanner;
+    var linhas;
+    var numero;
+    read (linhas);
+
+    for (i : 0 ; i < linhas ; i : i + 1) {
+        numero : 1;
+        for (j : 0 ; j < i ; j : j + 1) {
+            write (numero);
+            temp1 : i - j;
+            temp2 : numero * temp1;
+            temp3 : j + 1;
+            numero : temp2 / temp3;
+        };
+        write (numero);
+    };
+}

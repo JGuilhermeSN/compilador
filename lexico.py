@@ -114,6 +114,10 @@ class Lexico:
                 self.token += self.pointer
                 self.next()
                 self.q40()
+            case 'a': # criar verifiçao token and
+                pass
+            case 'o': # criar verificaçao token or
+                pass
             case '<' | '>' | '/' | '*' | '+' | '-' | '{' | '}' | '(' | ')' | ':' | ';' | ',':
                 self.symbol_verifyer()
             case _: # Default
@@ -598,7 +602,7 @@ class Lexico:
         """funçao para reconhecer id """
         if not len(self.source_file) == self.i:
             self.pointer = self.source_file[self.i]
-            if self.pointer.isalnum():
+            if self.pointer.isalnum() or self.pointer == '_':
                 self.token += self.pointer
                 self.next()
                 self.id_verifyer()

@@ -1,0 +1,23 @@
+program {
+    var lado1;
+    var lado2;
+    var lado3;
+    read (lado1);
+    read (lado2);
+    read (lado3);
+
+     if (lado1 == lado2 ) then
+	if (lado2 == lado3)then
+           write (Equilatero);
+	endif;
+     else if(lado1== lado2)then
+             write(isosceles);
+          endif;
+	  if(lado2== lado3)then
+             write(isosceles);
+          endif;
+          if(lado3== lado1)then
+             write(isosceles);
+          endif;
+    endif;
+}

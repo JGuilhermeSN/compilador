@@ -19,3 +19,17 @@ def open_file(self):
 
 
 fazer a verificaçao de espaço antes das analises de q0, um /n equivale a 4 " "
+
+codigo teste do meu compilador
+program{
+var teste, tst;
+if (teste==tst) then
+	write (ola);
+endif;
+while(teste>tst) do{
+	read (teste);
+};
+for (tst:0 ; tst!=10 ; tst: tst+1){
+	write (teste);
+};
+}
