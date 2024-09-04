@@ -1,6 +1,7 @@
 program programa{
     var teste, tst;
     if (teste==10) then
-	    write (estou_fazendo um teste);
+	    write (aid estou_fazendo um teste);
+
     endif;
 }
